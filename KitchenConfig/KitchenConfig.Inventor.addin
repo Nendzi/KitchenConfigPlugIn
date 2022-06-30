@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Addin Type="Plugin">
+  <ClassId>{cb2f4835-6812-436e-9be0-4b81d2e7323f}</ClassId>
+  <ClientId>{cb2f4835-6812-436e-9be0-4b81d2e7323f}</ClientId>
+  <DisplayName>KitchenConfig</DisplayName>
+  <Description>a KitchenConfig</Description>
+  <Assembly>KitchenConfig.dll</Assembly>
+</Addin>
