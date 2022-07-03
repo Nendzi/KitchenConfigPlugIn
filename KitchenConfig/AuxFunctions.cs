@@ -15,9 +15,9 @@ namespace KitchenConfig
 
         public static string GetWorkingDir(AssemblyDocument mainDoc)
         {
-            //return thisApp.DesignProjectManager.ActiveDesignProject.WorkspacePath;
+            return thisApp.DesignProjectManager.ActiveDesignProject.WorkspacePath;
             //return System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            return System.IO.Path.GetDirectoryName(mainDoc.FullFileName); // used in forge implementation
+            //return System.IO.Path.GetDirectoryName(mainDoc.FullFileName); // used in forge implementation
         }
 
         public static Matrix CreateMatrix(string axisX, string axisY, string axisZ, double posX, double posY, double posZ)
@@ -72,13 +72,13 @@ namespace KitchenConfig
                     ExtrudeFeatures doorFeats = doorDef.Features.ExtrudeFeatures;
                     if (hasGlass)
                     {
-                        doorFeats["Staklo"].Suppressed = false;
-                        doorFeats["Prozor"].Suppressed = false;
+                        doorFeats["Glass"].Suppressed = false;
+                        doorFeats["Opening"].Suppressed = false;
                     }
                     else
                     {
-                        doorFeats["Staklo"].Suppressed = true;
-                        doorFeats["Prozor"].Suppressed = true;
+                        doorFeats["Glass"].Suppressed = true;
+                        doorFeats["Opening"].Suppressed = true;
                     }
                     continue;
                 }
@@ -87,8 +87,7 @@ namespace KitchenConfig
 
         public static double CalculateDoorDim(double dimIn)
         {
-            // Oduzmi od dimenzije dve debljine kantrake i dve debljine zazora od 1mm
-            return dimIn - 2 * 0.1;
+            return dimIn - 2 * 0.1; //0.1 = kant tape thickness
         }
 
         public static bool IsFileExist(string fileName)
@@ -96,7 +95,7 @@ namespace KitchenConfig
             return System.IO.File.Exists(fileName);
         }
 
-        public static void MakePattern(ComponentOccurrence oOcc, double sirina, double dubina)
+        public static void MakePattern(ComponentOccurrence oOcc, double width, double depth)
         {
             // Set a reference to the AssemblyComponentDefinition
             AssemblyComponentDefinition oDef = mainDoc.ComponentDefinition;
@@ -113,7 +112,7 @@ namespace KitchenConfig
             // Create a rectangular pattern of components\:
             // 2 columns in the x\-direction with an offset of sirina in
             // 2 rows in the y\-direction with an offset of dubina in
-            oDef.OccurrencePatterns.AddRectangularPattern(oParentOccs, oXAxis, true, sirina, 2, oYAxis, true, dubina, 2);
+            oDef.OccurrencePatterns.AddRectangularPattern(oParentOccs, oXAxis, true, width, 2, oYAxis, true, depth, 2);
         }
 
         public static string ExtractName(string fileName)

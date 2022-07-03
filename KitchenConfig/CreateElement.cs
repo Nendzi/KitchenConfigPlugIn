@@ -9,17 +9,16 @@ namespace KitchenConfig
     {
         static AssemblyComponentDefinition MainAssy;
         public static string mainFolder;
-        static string ladiceFolder;
-        static string sudopereFolder;
-        static string radnePloceFolder;
-        static string nogareFolder;
-        //static string kantTrakeFolder;
-        static string bokoviFolder;
-        static double sirina;
-        static double visina;
-        static double pozicija = 0;
+        static string drawerFolder;
+        static string sinkFolder;
+        static string workingTopFolder;
+        static string legsFolder;
+        static string sidesFolder;
+        static double width;
+        static double height;
+        static double position = 0;
         public static double realHeigth;
-        static double dubina = 60;
+        static double depth = 60;
         static string ivyxHeigth;
         static string ivyxType;
         static string[] ivyxTypeName;
@@ -45,71 +44,70 @@ namespace KitchenConfig
 
             Init();
 
-            //Izrada korpusa
-            PlaceElement("Donja ploca", bokoviFolder);
-            PlaceElement("Desni bok", bokoviFolder);
-            PlaceElement("Levi bok", bokoviFolder);
-            PlaceElement("Lesonit", bokoviFolder);
-            PlaceElement("Nogare", nogareFolder);
+            // Creating corpus for kitchnen element
+            PlaceElement("Bottom panel", sidesFolder);
+            PlaceElement("Right panel", sidesFolder);
+            PlaceElement("Left panel", sidesFolder);
+            PlaceElement("Thin back plate", sidesFolder);
+            PlaceElement("Legs", legsFolder);
             switch (sinkType)
             {
                 case -1:
-                    PlaceElement("Top element", radnePloceFolder);
+                    PlaceElement("Top element", workingTopFolder);
                     break;
                 case 0:
-                    PlaceSink(sinkType, sudopereFolder);
+                    PlaceSink(sinkType, sinkFolder);
                     break;
                 case 1:
-                    PlaceSink(sinkType, sudopereFolder);
+                    PlaceSink(sinkType, sinkFolder);
                     break;
                 case 2:
-                    PlaceSink(sinkType, sudopereFolder);
+                    PlaceSink(sinkType, sinkFolder);
                     break;
             }
-            // Ubaci pregrade
+            // Insert dividers
             List<double> distances = DividersDistribution();
             var rb = 1;
             foreach (var distance in distances)
             {
-                PlaceElement("Pregrada", bokoviFolder, distance, rb);
+                PlaceElement("Divider", sidesFolder, distance, rb);
                 rb++;
             }
-            //za svaki ivyx u ivyxTypeName pokreni odgovarajuči cs
-            visina = 0;
+
+            height = 0;
             for (int i = 0; i < ivyxTypeName.Length; i++)
             {
-                visina = AuxFunctions.CalculateIvyxHeight(ivyxHeightInPercent[i]);
+                height = AuxFunctions.CalculateIvyxHeight(ivyxHeightInPercent[i]);
                 switch (AuxFunctions.ConvertStrInEnum(ivyxTypeName[i]))
                 {
                     case IvyxType.closed:
-                        CreateClosedFront.PlaceClosedFront(sirina, visina, pozicija, i);
+                        CreateClosedFront.PlaceClosedFront(width, height, position, i);
                         break;
                     case IvyxType.drawer:
-                        CreateDrawer.PlaceDrawer(sirina, visina, pozicija, i);
+                        CreateDrawer.PlaceDrawer(width, height, position, i);
                         break;
                     case IvyxType.leftDoor:
-                        CreateDoor.PlaceDoor(sirina, visina, pozicija, i);
+                        CreateDoor.PlaceDoor(width, height, position, i);
                         break;
                     case IvyxType.rightDoor:
-                        CreateMirrorDoor.PlaceDoor(sirina, visina, pozicija, i, 1);
+                        CreateMirrorDoor.PlaceDoor(width, height, position, i, 1);
                         break;
                     case IvyxType.doubleDoor:
-                        CreateDoor.PlaceDoor(sirina / 2, visina, pozicija, i);
-                        CreateMirrorDoor.PlaceDoor(sirina, visina, pozicija, i, 0.5);
+                        CreateDoor.PlaceDoor(width / 2, height, position, i);
+                        CreateMirrorDoor.PlaceDoor(width, height, position, i, 0.5);
                         break;
                     case IvyxType.cassette:
-                        CreateCassette.PlaceCassette(sirina, visina, pozicija, i);
+                        CreateCassette.PlaceCassette(width, height, position, i);
                         break;
                     case IvyxType.open:
                     default:
                         break;
                 }
-                pozicija += AuxFunctions.CalculateIvyxHeight(ivyxHeightInPercent[i]);
+                position += AuxFunctions.CalculateIvyxHeight(ivyxHeightInPercent[i]);
             }
 
             string NameForDisk;
             AssemblyDocument topAssy = oDoc;
-            //ComponentOccurrence doorOcc;
 
             foreach (ComponentOccurrence doorOcc in topAssy.ComponentDefinition.Occurrences)
             {
@@ -137,52 +135,52 @@ namespace KitchenConfig
             //Load element
             switch (name)
             {
-                case "Donja ploca":
+                case "Bottom panel":
                     orjX = "Z";
                     orjY = "X";
                     orjZ = "Y";
                     posX = 1.8;
                     posY = 2.8;
                     posZ = 0;
-                    fileName = "Gen Bok I Polica.ipt";
+                    fileName = "Gen Side and Panel.ipt";
                     break;
-                case "Desni bok":
+                case "Right panel":
                     orjX = "-X";
                     orjY = "Z";
                     orjZ = "Y";
-                    posX = sirina;
+                    posX = width;
                     posY = 2.8;
                     posZ = 0;
-                    fileName = "Gen Bok I Polica.ipt";
+                    fileName = "Gen Side and Panel.ipt";
                     break;
-                case "Levi bok":
+                case "Left panel":
                     orjX = "X";
                     orjY = "-Z";
                     orjZ = "Y";
                     posX = 0;
                     posY = 2.8;
-                    posZ = visina - 3.8;
-                    fileName = "Gen Bok I Polica.ipt";
+                    posZ = height - 3.8;
+                    fileName = "Gen Side and Panel.ipt";
                     break;
-                case "Lesonit":
+                case "Thin back plate":
                     orjX = "X";
                     orjY = "-Y";
                     orjZ = "-Z";
-                    posX = sirina / 2;
-                    posY = dubina;
-                    posZ = (visina - 3.8) / 2;
-                    fileName = "Gen Lesonit.ipt";
+                    posX = width / 2;
+                    posY = depth;
+                    posZ = (height - 3.8) / 2;
+                    fileName = "Gen Back plate.ipt";
                     break;
                 case "Top element":
                     orjX = "X";
                     orjY = "Z";
                     orjZ = "-Y";
-                    posX = sirina / 2;
-                    posY = dubina;
-                    posZ = visina - 3.8;
-                    fileName = "Gen Radna ploca.ipt";
+                    posX = width / 2;
+                    posY = depth;
+                    posZ = height - 3.8;
+                    fileName = "Gen Top plate.ipt";
                     break;
-                case "Nogare":
+                case "Legs":
                     orjX = "-Y";
                     orjY = "Z";
                     orjZ = "-X";
@@ -191,14 +189,14 @@ namespace KitchenConfig
                     posZ = -10;
                     fileName = "Leg01.ipt";
                     break;
-                case "Pregrada":
+                case "Divider":
                     orjX = "Z";
                     orjY = "X";
                     orjZ = "Y";
                     posX = 1.8;
                     posY = 2.8;
                     posZ = distance;
-                    fileName = "Gen Bok I Polica.ipt";
+                    fileName = "Gen Side and Panel.ipt";
                     break;
             }
 
@@ -217,10 +215,10 @@ namespace KitchenConfig
 
             switch (name)
             {
-                case "Donja ploca":
-                case "Pregrada":
-                    elemUserParameters["Visina"].Value = sirina - 2 * 1.8;
-                    elemUserParameters["Dubina"].Value = dubina - 0.4 - 2.8;
+                case "Bottom panel":
+                case "Divider":
+                    elemUserParameters["Height"].Value = width - 2 * 1.8;
+                    elemUserParameters["Depth"].Value = depth - 0.4 - 2.8;
                     if (rb == 0)
                     {
                         newOcc.Name = name;
@@ -229,32 +227,32 @@ namespace KitchenConfig
                     {
                         newOcc.Name = name + rb.ToString();
                     }
-                    fileName = "Bottom " + AuxFunctions.MakeDimensions(sirina, dubina) + ".ipt";
+                    fileName = "Bottom " + AuxFunctions.MakeDimensions(width, depth) + ".ipt";
                     break;
-                case "Desni bok":
-                    elemUserParameters["Visina"].Value = visina - 3.8;
-                    elemUserParameters["Dubina"].Value = dubina - 0.4 - 2.8;
+                case "Right panel":
+                    elemUserParameters["Height"].Value = height - 3.8;
+                    elemUserParameters["Depth"].Value = depth - 0.4 - 2.8;
                     newOcc.Name = name;
-                    fileName = "Lateral " + AuxFunctions.MakeDimensions(visina, dubina) + ".ipt";
+                    fileName = "Lateral " + AuxFunctions.MakeDimensions(height, depth) + ".ipt";
                     break;
-                case "Levi bok":
-                    elemUserParameters["Visina"].Value = visina - 3.8;
-                    elemUserParameters["Dubina"].Value = dubina - 0.4 - 2.8;
+                case "Left panel":
+                    elemUserParameters["Height"].Value = height - 3.8;
+                    elemUserParameters["Depth"].Value = depth - 0.4 - 2.8;
                     newOcc.Name = name;
-                    fileName = "Lateral " + AuxFunctions.MakeDimensions(visina, dubina) + ".ipt";
+                    fileName = "Lateral " + AuxFunctions.MakeDimensions(height, depth) + ".ipt";
                     break;
-                case "Lesonit":
-                    elemUserParameters["Visina"].Value = visina - 3.8;
-                    elemUserParameters["Sirina"].Value = sirina;
+                case "Thin back plate":
+                    elemUserParameters["Height"].Value = height - 3.8;
+                    elemUserParameters["Width"].Value = width;
                     newOcc.Name = name;
                     break;
                 case "Top element":
-                    elemUserParameters["Sirina"].Value = sirina;
+                    elemUserParameters["Width"].Value = width;
                     newOcc.Name = name;
                     break;
-                case "Nogare":
+                case "Legs":
                     newOcc.Name = name;
-                    AuxFunctions.MakePattern(newOcc, sirina - 2 * 4, dubina - 2.8 - 2 * 4);
+                    AuxFunctions.MakePattern(newOcc, width - 2 * 4, depth - 2.8 - 2 * 4);
                     break;
             }
 
@@ -264,11 +262,9 @@ namespace KitchenConfig
             if (!AuxFunctions.IsFileExist(fileNameOnDisk))
             {
                 oCompDef.Document.SaveAs(fileNameOnDisk, true);
-                //Trace.TraceInformation($"Snimam na disk {fileNameOnDisk}");
             }
 
             newOcc.Replace(fileNameOnDisk, false);
-            //Trace.TraceInformation($"Zamenjujem sa {fileNameOnDisk}");
 
             oMainDoc.ReleaseReference();
             oMainDoc.Close();
@@ -289,17 +285,17 @@ namespace KitchenConfig
 
         private static void Init()
         {
-            sudopereFolder = AuxFunctions.GetWorkingDir(oActiveDoc) + @"\Sudopere\Nasadne";
-            radnePloceFolder = AuxFunctions.GetWorkingDir(oActiveDoc) + @"\Radne ploce";
-            nogareFolder = AuxFunctions.GetWorkingDir(oActiveDoc) + @"\Nogare";
-            bokoviFolder = AuxFunctions.GetWorkingDir(oActiveDoc) + @"\Bokovi i police";
-            ladiceFolder = AuxFunctions.GetWorkingDir(oActiveDoc) + @"\Ladice";
+            sinkFolder = AuxFunctions.GetWorkingDir(oActiveDoc) + @"\Sink\BuiltOn";
+            workingTopFolder = AuxFunctions.GetWorkingDir(oActiveDoc) + @"\Top";
+            legsFolder = AuxFunctions.GetWorkingDir(oActiveDoc) + @"\Legs";
+            sidesFolder = AuxFunctions.GetWorkingDir(oActiveDoc) + @"\Sides and Shelfs";
+            drawerFolder = AuxFunctions.GetWorkingDir(oActiveDoc) + @"\Drawers";
 
             mainFolder = AuxFunctions.GetWorkingDir(oActiveDoc) + @"\Result";
 
-            sirina = oActiveDoc.ComponentDefinition.Parameters.UserParameters["width"].Value; //mm
-            visina = oActiveDoc.ComponentDefinition.Parameters.UserParameters["height"].Value; //mm
-            realHeigth = visina - 3.8;
+            width = oActiveDoc.ComponentDefinition.Parameters.UserParameters["width"].Value; //mm
+            height = oActiveDoc.ComponentDefinition.Parameters.UserParameters["height"].Value; //mm
+            realHeigth = height - 3.8;
             ivyxType = oActiveDoc.ComponentDefinition.Parameters.UserParameters["ivyxType"].Value;
             ivyxHeigth = oActiveDoc.ComponentDefinition.Parameters.UserParameters["ivyxHeigth"].Value;
 
@@ -384,7 +380,7 @@ namespace KitchenConfig
             }
 
             double elevation = 0;
-            double position = 0;
+            double position;
             for (int i = 0; i < offsets.Length; i++)
             {
                 elevation += AuxFunctions.CalculateIvyxHeight(ivyxHeightInPercent[i]);

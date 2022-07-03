@@ -7,34 +7,33 @@ namespace KitchenConfig
     public static class CreateClosedFront
     {
         static string closedFolder;
-        static string kantTrakeFolder;
+        static string kantTapeFolder;
         static string slidersFolder;
-        static double sirina;
-        static double visina;
-        static double pozicija;
+        static double width;
+        static double height;
+        static double position;
         static ComponentOccurrence newOcc;
         static InventorServer thisApp;
         static AssemblyDocument mainDoc;
         static AssemblyDocument CurrentDoc;
 
-        public static void PlaceClosedFront(double SirinaIn, double VisinaIn, double PositionIn, int rn)
+        public static void PlaceClosedFront(double widthIn, double heightIn, double positionIn, int rn)
         {
-            sirina = AuxFunctions.CalculateDoorDim(SirinaIn); // obračunaj stvarnu sirinu i visinu vrata. to je potrebno zbog dužina kant trake
-            visina = AuxFunctions.CalculateDoorDim(VisinaIn);
-            pozicija = PositionIn;
+            width = AuxFunctions.CalculateDoorDim(widthIn);
+            height = AuxFunctions.CalculateDoorDim(heightIn);
+            position = positionIn;
 
             Init();
 
             MakeClosedFront(rn + 1);
-            //newOcc.Edit(); forge se buni
+            //newOcc.Edit(); // comment for forge
             CurrentDoc = newOcc.Definition.Document as AssemblyDocument;
 
-            // Popunjavanje vrata elementima
             PlaceElement("Front", closedFolder);
-            PlaceElement("ABS:1", kantTrakeFolder);
-            PlaceElement("ABS:2", kantTrakeFolder);
-            PlaceElement("ABS:3", kantTrakeFolder);
-            PlaceElement("ABS:4", kantTrakeFolder);
+            PlaceElement("ABS:1", kantTapeFolder);
+            PlaceElement("ABS:2", kantTapeFolder);
+            PlaceElement("ABS:3", kantTapeFolder);
+            PlaceElement("ABS:4", kantTapeFolder);
 
             CurrentDoc.Update2(true);
             //newOcc.ExitEdit(ExitTypeEnum.kExitToTop); ako nema edit nema ni exitedit
@@ -42,9 +41,9 @@ namespace KitchenConfig
 
         private static void Init()
         {
-            closedFolder = AuxFunctions.GetWorkingDir(mainDoc) + @"\Ladice";
-            kantTrakeFolder = AuxFunctions.GetWorkingDir(mainDoc) + @"\Kant trake";
-            slidersFolder = AuxFunctions.GetWorkingDir(mainDoc) + @"Ladice\Klizaci";
+            closedFolder = AuxFunctions.GetWorkingDir(mainDoc) + @"\Drawers";
+            kantTapeFolder = AuxFunctions.GetWorkingDir(mainDoc) + @"\Kant tapes";
+            slidersFolder = AuxFunctions.GetWorkingDir(mainDoc) + @"Drawers\Sliders";
         }
 
         private static void PlaceElement(string name, string location)
@@ -65,10 +64,10 @@ namespace KitchenConfig
                     orjX = "X";
                     orjY = "-Z";
                     orjZ = "Y";
-                    posX = sirina / 2 - 0.3;
-                    posY = pozicija + visina / 2 - 0.3;
+                    posX = width / 2 - 0.3;
+                    posY = position + height / 2 - 0.3;
                     posZ = 0;
-                    fileName = "GenFrontLadice.ipt";
+                    fileName = "GenDrawerFront.ipt";
                     break;
 
                 case "ABS:1":
@@ -76,7 +75,7 @@ namespace KitchenConfig
                     orjY = "-X";
                     orjZ = "Y";
                     posX = 0;
-                    posY = pozicija + visina / 2 - 0.3;
+                    posY = position + height / 2 - 0.3;
                     posZ = 0;
                     fileName = "ABS.ipt";
                     break;
@@ -85,8 +84,8 @@ namespace KitchenConfig
                     orjX = "-Z";
                     orjY = "X";
                     orjZ = "-Y";
-                    posX = sirina - 2 * 0.3;
-                    posY = pozicija + visina / 2 - 0.3;
+                    posX = width - 2 * 0.3;
+                    posY = position + height / 2 - 0.3;
                     posZ = 0;
                     fileName = "ABS.ipt";
                     break;
@@ -95,8 +94,8 @@ namespace KitchenConfig
                     orjX = "-Z";
                     orjY = "-Y";
                     orjZ = "-X";
-                    posX = sirina / 2 - 0.3;
-                    posY = pozicija;
+                    posX = width / 2 - 0.3;
+                    posY = position;
                     posZ = 0;
                     fileName = "ABS.ipt";
                     break;
@@ -105,8 +104,8 @@ namespace KitchenConfig
                     orjX = "-Z";
                     orjY = "Y";
                     orjZ = "X";
-                    posX = sirina / 2 - 0.3;
-                    posY = pozicija + visina - 2 * 0.3;
+                    posX = width / 2 - 0.3;
+                    posY = position + height - 2 * 0.3;
                     posZ = 0;
                     fileName = "ABS.ipt";
                     break;
@@ -127,30 +126,30 @@ namespace KitchenConfig
             switch (name)
             {
                 case "Front":
-                    elemUserParameters["Width"].Value = sirina;
-                    elemUserParameters["Heigth"].Value = visina;
+                    elemUserParameters["Width"].Value = width;
+                    elemUserParameters["Heigth"].Value = height;
                     foreach (HoleFeature item in oCompDef.Features.HoleFeatures)
                     {
                         item.Suppressed = true;
                     }                   
-                    fileName = "Closed Front " + AuxFunctions.ConvertCmInMm(sirina) + "x" + AuxFunctions.ConvertCmInMm(visina) + ".ipt";
+                    fileName = "Closed Front " + AuxFunctions.ConvertCmInMm(width) + "x" + AuxFunctions.ConvertCmInMm(height) + ".ipt";
                     newOcc.Name = name;
                     break;
                 case "ABS:1":
-                    elemUserParameters["Length"].Value = visina - 2 * 0.3;
+                    elemUserParameters["Length"].Value = height - 2 * 0.3;
                     newOcc.Name = name;
                     break;
                 case "ABS:2":
-                    elemUserParameters["Length"].Value = visina - 2 * 0.3;
+                    elemUserParameters["Length"].Value = height - 2 * 0.3;
                     newOcc.Name = name;
                     break;
                 case "ABS:3":
-                    elemUserParameters["Length"].Value = sirina - 2 * 0.3;
+                    elemUserParameters["Length"].Value = width - 2 * 0.3;
                     newOcc.Name = name;
                     break;
                 case "ABS:4":
                 default:
-                    elemUserParameters["Length"].Value = sirina - 2 * 0.3;
+                    elemUserParameters["Length"].Value = width - 2 * 0.3;
                     newOcc.Name = name;
                     break;
             }
@@ -168,7 +167,6 @@ namespace KitchenConfig
                 //Trace.TraceInformation($"I am saving in Create front {CreateElement.mainFolder + @"\" + fileName}");
             }
 
-            // s obzirom da fajle već postoji treba ga zameniti
             newOcc.Replace(CreateElement.mainFolder + @"\" + fileName, false);
             //Trace.TraceInformation($"I am replacing in Create front {CreateElement.mainFolder + @"\" + fileName}");
 
@@ -183,7 +181,7 @@ namespace KitchenConfig
         {
             ComponentOccurrences allOccurrs = mainDoc.ComponentDefinition.Occurrences;
 
-            AssemblyDocument oMainDoc = thisApp.Documents.Add(DocumentTypeEnum.kAssemblyDocumentObject, closedFolder + @"\GenFrontLadice.iam", false) as AssemblyDocument;
+            AssemblyDocument oMainDoc = thisApp.Documents.Add(DocumentTypeEnum.kAssemblyDocumentObject, closedFolder + @"\GenDrawerFront.iam", false) as AssemblyDocument;
 
             AssemblyComponentDefinition oCompDef = oMainDoc.ComponentDefinition;
 

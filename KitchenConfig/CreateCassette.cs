@@ -9,29 +9,26 @@ namespace KitchenConfig
 {
     public class CreateCassette
     {
-        static string vrataFolder;
-        static string rukohvatiFolder;
-        static string kantTrakeFolder;
-        static string stakloFolder;
+        static string doorFolder;
+        static string handlerFolder;
+        static string kantTapeFolder;
+        static string glassFolder;
         public static bool hasGlass;
-        //static int handleType;
-        //static bool hasShelf;
-        //static int shelfQty;
-        static double sirina;
-        static double visina;
-        static double pozicija;
+        static double width;
+        static double height;
+        static double position;
         static ComponentOccurrence newOcc;
         static InventorServer thisApp;
         static AssemblyDocument mainDoc;
         static AssemblyDocument CurrentDoc;
 
 
-        public static void PlaceCassette(double SirinaIn, double VisinaIn, double PositionIn, int rn)
+        public static void PlaceCassette(double widthIn, double heightIn, double positionIn, int rn)
         {
-            sirina = AuxFunctions.CalculateDoorDim(VisinaIn); // obračunaj stvarnu sirinu i visinu vrata. to je potrebno zbog dužina kant trake
-            visina = AuxFunctions.CalculateDoorDim(SirinaIn); // namerno je okrenuto jer sada vrata stoje horizontalno
-            pozicija = PositionIn;
-            if (visina < 150)
+            width = AuxFunctions.CalculateDoorDim(heightIn);
+            height = AuxFunctions.CalculateDoorDim(widthIn);
+            position = positionIn;
+            if (height < 150)
             {
                 hasGlass = false;
             }
@@ -46,16 +43,16 @@ namespace KitchenConfig
             CurrentDoc = newOcc.Definition.Document as AssemblyDocument;
 
             // Popunjavanje vrata elementima
-            PlaceElement("CassetteDoor", vrataFolder);
+            PlaceElement("CassetteDoor", doorFolder);
             AuxFunctions.PrepareGlassPlace(newOcc, "CassetteDoor", hasGlass);
-            PlaceElement("Rukohvat", rukohvatiFolder);
-            PlaceElement("ABS:1", kantTrakeFolder);
-            PlaceElement("ABS:2", kantTrakeFolder);
-            PlaceElement("ABS:3", kantTrakeFolder);
-            PlaceElement("ABS:4", kantTrakeFolder);
+            PlaceElement("Handler", handlerFolder);
+            PlaceElement("ABS:1", kantTapeFolder);
+            PlaceElement("ABS:2", kantTapeFolder);
+            PlaceElement("ABS:3", kantTapeFolder);
+            PlaceElement("ABS:4", kantTapeFolder);
             if (hasGlass)
             {
-                PlaceElement("Staklo", stakloFolder);
+                PlaceElement("Glass", glassFolder);
             }
 
             CurrentDoc.Update2(true);
@@ -63,10 +60,10 @@ namespace KitchenConfig
 
         private static void Init()
         {
-            vrataFolder = AuxFunctions.GetWorkingDir(mainDoc) + @"\Vrata";
-            rukohvatiFolder = AuxFunctions.GetWorkingDir(mainDoc) + @"\Rukohvati";
-            kantTrakeFolder = AuxFunctions.GetWorkingDir(mainDoc) + @"\Kant trake";
-            stakloFolder = AuxFunctions.GetWorkingDir(mainDoc) + @"\Vrata";
+            doorFolder = AuxFunctions.GetWorkingDir(mainDoc) + @"\Doors";
+            handlerFolder = AuxFunctions.GetWorkingDir(mainDoc) + @"\Handlers";
+            kantTapeFolder = AuxFunctions.GetWorkingDir(mainDoc) + @"\Kant tapes";
+            glassFolder = AuxFunctions.GetWorkingDir(mainDoc) + @"\Doors";
         }
 
         private static void PlaceElement(string name, string location)
@@ -87,35 +84,35 @@ namespace KitchenConfig
                     orjX = "X";
                     orjY = "Y";
                     orjZ = "Z";
-                    posX = pozicija;
+                    posX = position;
                     posY = 0;
                     posZ = -1.8;
-                    fileName = "Gen Vrata.ipt";
+                    fileName = "Gen Door.ipt";
                     break;
-                case "Rukohvat":
+                case "Handler":
                     orjX = "X";
                     orjY = "Y";
                     orjZ = "Z";
                     posX = 0;
                     posY = 0;
                     posZ = 0;
-                    fileName = "Rukohvat01.ipt";
+                    fileName = "Handler01.ipt";
                     break;
-                case "Staklo":
+                case "Glass":
                     orjX = "X";
                     orjY = "Y";
                     orjZ = "Z";
-                    posX = pozicija;
+                    posX = position;
                     posY = 0;
                     posZ = 0;
-                    fileName = "Staklo.ipt";
+                    fileName = "Glass.ipt";
                     break;
                 case "ABS:1":
                     orjX = "-Z";
                     orjY = "-X";
                     orjZ = "Y";
-                    posX = pozicija;
-                    posY = visina / 2 - 0.3;
+                    posX = position;
+                    posY = height / 2 - 0.3;
                     posZ = 0;
                     fileName = "ABS.ipt";
                     break;
@@ -124,8 +121,8 @@ namespace KitchenConfig
                     orjX = "-Z";
                     orjY = "X";
                     orjZ = "-Y";
-                    posX = pozicija + sirina - 2 * 0.3;
-                    posY = visina / 2 - 0.3;
+                    posX = position + width - 2 * 0.3;
+                    posY = height / 2 - 0.3;
                     posZ = 0;
                     fileName = "ABS.ipt";
                     break;
@@ -134,7 +131,7 @@ namespace KitchenConfig
                     orjX = "-Z";
                     orjY = "-Y";
                     orjZ = "-X";
-                    posX = pozicija + sirina / 2 - 0.3;
+                    posX = position + width / 2 - 0.3;
                     posY = 0;
                     posZ = 0;
                     fileName = "ABS.ipt";
@@ -144,8 +141,8 @@ namespace KitchenConfig
                     orjX = "-Z";
                     orjY = "Y";
                     orjZ = "X";
-                    posX = pozicija + sirina / 2 - 0.3;
-                    posY = visina - 2 * 0.3;
+                    posX = position + width / 2 - 0.3;
+                    posY = height - 2 * 0.3;
                     posZ = 0;
                     fileName = "ABS.ipt";
                     break;
@@ -157,7 +154,7 @@ namespace KitchenConfig
             ComponentOccurrence newOcc;
             PartDocument oMainDoc = null;
 
-            if (fileName == "Staklo.ipt" || fileName == "Rukohvat01.ipt")
+            if (fileName == "Glass.ipt" || fileName == "Handler01.ipt")
             {
                 try
                 {
@@ -186,37 +183,37 @@ namespace KitchenConfig
             switch (name)
             {
                 case "CassetteDoor":
-                    elemUserParameters["Sirina"].Value = sirina;
-                    elemUserParameters["Visina"].Value = visina;
-                    elemUserParameters["RazmakRukohvata"].Value = 9;
-                    elemUserParameters["RukohvatLD"].Value = (visina - 9) / 2;
-                    fileName = "Cassette front " + AuxFunctions.ConvertCmInMm(visina) + "x" + AuxFunctions.ConvertCmInMm(sirina) + ".ipt";
+                    elemUserParameters["Width"].Value = width;
+                    elemUserParameters["Height"].Value = height;
+                    elemUserParameters["HandlerHolesDistance"].Value = 9;
+                    elemUserParameters["HandlerFromTop"].Value = (height - 9) / 2;
+                    fileName = "Cassette front " + AuxFunctions.ConvertCmInMm(height) + "x" + AuxFunctions.ConvertCmInMm(width) + ".ipt";
                     newOcc.Name = name;
                     break;
-                case "Rukohvat":
+                case "Handler":
                     newOcc.Name = name;
                     break;
-                case "Staklo":
-                    elemUserParameters["Visina"].Value = visina - 0.6 - 2 * 7;
-                    elemUserParameters["Sirina"].Value = sirina - 0.6 - 2 * 7;
-                    fileName = "Glass " + AuxFunctions.ConvertCmInMm(sirina) + "x" + AuxFunctions.ConvertCmInMm(visina) + ".ipt";
+                case "Glass":
+                    elemUserParameters["Height"].Value = height - 0.6 - 2 * 7;
+                    elemUserParameters["Width"].Value = width - 0.6 - 2 * 7;
+                    fileName = "Glass " + AuxFunctions.ConvertCmInMm(width) + "x" + AuxFunctions.ConvertCmInMm(height) + ".ipt";
                     newOcc.Name = name;
                     break;
                 case "ABS:1":
-                    elemUserParameters["Length"].Value = visina - 2 * 0.3;
+                    elemUserParameters["Length"].Value = height - 2 * 0.3;
                     newOcc.Name = name;
                     break;
                 case "ABS:2":
-                    elemUserParameters["Length"].Value = visina - 2 * 0.3;
+                    elemUserParameters["Length"].Value = height - 2 * 0.3;
                     newOcc.Name = name;
                     break;
                 case "ABS:3":
-                    elemUserParameters["Length"].Value = sirina - 2 * 0.3;
+                    elemUserParameters["Length"].Value = width - 2 * 0.3;
                     newOcc.Name = name;
                     break;
                 case "ABS:4":
                 default:
-                    elemUserParameters["Length"].Value = sirina - 2 * 0.3;
+                    elemUserParameters["Length"].Value = width - 2 * 0.3;
                     newOcc.Name = name;
                     break;
             }
@@ -234,7 +231,6 @@ namespace KitchenConfig
                 //Trace.TraceInformation($"I am saving in Create door {CreateElement.mainFolder + @"\" + fileName}");
             }
 
-            // s obzirom da fajle već postoji treba ga zameniti
             newOcc.Replace(CreateElement.mainFolder + @"\" + fileName, false);
             //Trace.TraceInformation($"I am replacing in Create door {CreateElement.mainFolder + @"\" + fileName}");
 
@@ -248,13 +244,13 @@ namespace KitchenConfig
         private static void MakeCassetteAssembly(int redniBroj)
         {
             ComponentOccurrences allOccurrs = mainDoc.ComponentDefinition.Occurrences;
-            AssemblyDocument oMainDoc = thisApp.Documents.Add(DocumentTypeEnum.kAssemblyDocumentObject, vrataFolder + @"\GenVrata.iam", false) as AssemblyDocument;
+            AssemblyDocument oMainDoc = thisApp.Documents.Add(DocumentTypeEnum.kAssemblyDocumentObject, doorFolder + @"\GenDoor.iam", false) as AssemblyDocument;
             AssemblyComponentDefinition oCompDef = oMainDoc.ComponentDefinition;
 
             //position element
-            newOcc = allOccurrs.AddByComponentDefinition((ComponentDefinition)oCompDef, AuxFunctions.CreateMatrix("Z", "-X", "-Y", visina, 1, 0.4)); //"X", "Z", "-Y", 0.4, 1, 0.4
+            newOcc = allOccurrs.AddByComponentDefinition((ComponentDefinition)oCompDef, AuxFunctions.CreateMatrix("Z", "-X", "-Y", height, 1, 0.4)); //"X", "Z", "-Y", 0.4, 1, 0.4
             oMainDoc.Close();
-            newOcc.Name = "Vodo Vrata_" + redniBroj.ToString();
+            newOcc.Name = "Hor Door_" + redniBroj.ToString();
         }
 
         public static void Inject(AssemblyDocument doc, InventorServer app)

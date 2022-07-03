@@ -11,39 +11,38 @@ namespace KitchenConfig
         static string kantTrakeFolder;
         static string sliderFolder;
         //static int handleType;
-        static double sirina;
-        static double visina;
-        static double pozicija;
-        static double dubina = 60; //cm
+        static double width;
+        static double height;
+        static double position;
+        static double depth = 60; //cm
         static ComponentOccurrence newOcc;
         static InventorServer thisApp;
         static AssemblyDocument mainDoc;
         static AssemblyDocument CurrentDoc;
 
 
-        public static void PlaceDrawer(double SirinaIn, double VisinaIn, double PositionIn, int rn)
+        public static void PlaceDrawer(double widthIn, double heightIn, double positionIn, int rn)
         {
-            sirina = AuxFunctions.CalculateDoorDim(SirinaIn); // obračunaj stvarnu sirinu i visinu vrata. to je potrebno zbog dužina kant trake
-            visina = AuxFunctions.CalculateDoorDim(VisinaIn);
-            pozicija = PositionIn;
+            width = AuxFunctions.CalculateDoorDim(widthIn);
+            height = AuxFunctions.CalculateDoorDim(heightIn);
+            position = positionIn;
 
             Init();
 
             MakeDrawerAssembly(rn + 1);
-            //newOcc.Edit(); forge se buni
+            //newOcc.Edit(); //dont use in forge
             CurrentDoc = newOcc.Definition.Document as AssemblyDocument;
 
-            // Popunjavanje ladice elementima
             PlaceElement("DrawerFront", drawerFolder);
-            PlaceElement("Rukohvat", rukohvatiFolder);
+            PlaceElement("Handler", rukohvatiFolder);
             PlaceElement("ABS:1", kantTrakeFolder);
             PlaceElement("ABS:2", kantTrakeFolder);
             PlaceElement("ABS:3", kantTrakeFolder);
             PlaceElement("ABS:4", kantTrakeFolder);
-            PlaceElement("BokLadice:1", drawerFolder);
-            PlaceElement("BokLadice:2", drawerFolder);
-            PlaceElement("DnoLadice", drawerFolder);
-            PlaceElement("ZadnjiZidLadice", drawerFolder);
+            PlaceElement("DrawerSide:1", drawerFolder);
+            PlaceElement("DrawerSide:2", drawerFolder);
+            PlaceElement("DrawerBottom", drawerFolder);
+            PlaceElement("DrawerBackwall", drawerFolder);
 
             CurrentDoc.Update2(true);
             //newOcc.ExitEdit(ExitTypeEnum.kExitToTop); ako nema edit nema ni exitedit
@@ -51,10 +50,10 @@ namespace KitchenConfig
 
         private static void Init()
         {
-            drawerFolder = AuxFunctions.GetWorkingDir(mainDoc) + @"\Ladice";
-            rukohvatiFolder = AuxFunctions.GetWorkingDir(mainDoc) + @"\Rukohvati";
-            kantTrakeFolder = AuxFunctions.GetWorkingDir(mainDoc) + @"\Kant trake";
-            sliderFolder = AuxFunctions.GetWorkingDir(mainDoc) + @"\Ladice\Klizaci";
+            drawerFolder = AuxFunctions.GetWorkingDir(mainDoc) + @"\Drawers";
+            rukohvatiFolder = AuxFunctions.GetWorkingDir(mainDoc) + @"\Handlers";
+            kantTrakeFolder = AuxFunctions.GetWorkingDir(mainDoc) + @"\Kant tapes";
+            sliderFolder = AuxFunctions.GetWorkingDir(mainDoc) + @"\Drawers\Sliders";
         }
 
         private static void PlaceElement(string name, string location)
@@ -75,35 +74,35 @@ namespace KitchenConfig
                     orjX = "X";
                     orjY = "-Z";
                     orjZ = "Y";
-                    posX = sirina / 2 - 0.3;
-                    posY = pozicija + visina / 2 - 0.3;
+                    posX = width / 2 - 0.3;
+                    posY = position + height / 2 - 0.3;
                     posZ = 0;
-                    fileName = "GenFrontLadice.ipt";
+                    fileName = "GenDrawerFront.ipt";
                     break;
-                case "Rukohvat":
+                case "Handler":
                     orjX = "X";
                     orjY = "Y";
                     orjZ = "Z";
                     posX = 0;
                     posY = 0;
                     posZ = 0;
-                    fileName = "Rukohvat01.ipt";
+                    fileName = "Handler01.ipt";
                     break;
-                case "ZadnjiZidLadice":
+                case "DrawerBackwall":
                     orjX = "-Z";
                     orjY = "-X";
                     orjZ = "Y";
-                    posX = sirina / 2;
-                    posY = pozicija + 10 / 2 + 1.8 - 0.5;
-                    posZ = -dubina + 4.2;
-                    fileName = "GenBokLadice.ipt";
+                    posX = width / 2;
+                    posY = position + 10 / 2 + 1.8 - 0.5;
+                    posZ = -depth + 4.2;
+                    fileName = "GenDrawerSide.ipt";
                     break;
                 case "ABS:1":
                     orjX = "-Z";
                     orjY = "-X";
                     orjZ = "Y";
                     posX = 0;
-                    posY = pozicija + visina / 2 - 0.3;
+                    posY = position + height / 2 - 0.3;
                     posZ = 0;
                     fileName = "ABS.ipt";
                     break;
@@ -112,8 +111,8 @@ namespace KitchenConfig
                     orjX = "-Z";
                     orjY = "X";
                     orjZ = "-Y";
-                    posX = sirina - 2 * 0.3;
-                    posY = pozicija + visina / 2 - 0.3;
+                    posX = width - 2 * 0.3;
+                    posY = position + height / 2 - 0.3;
                     posZ = 0;
                     fileName = "ABS.ipt";
                     break;
@@ -122,8 +121,8 @@ namespace KitchenConfig
                     orjX = "-Z";
                     orjY = "-Y";
                     orjZ = "-X";
-                    posX = sirina / 2 - 0.3;
-                    posY = pozicija;
+                    posX = width / 2 - 0.3;
+                    posY = position;
                     posZ = 0;
                     fileName = "ABS.ipt";
                     break;
@@ -132,38 +131,38 @@ namespace KitchenConfig
                     orjX = "-Z";
                     orjY = "Y";
                     orjZ = "X";
-                    posX = sirina / 2 - 0.3;
-                    posY = pozicija + visina - 2 * 0.3;
+                    posX = width / 2 - 0.3;
+                    posY = position + height - 2 * 0.3;
                     posZ = 0;
                     fileName = "ABS.ipt";
                     break;
-                case "BokLadice:1":
+                case "DrawerSide:1":
                     orjX = "X";
                     orjY = "-Z";
                     orjZ = "Y";
-                    posX = sirina - 4.6;
-                    posY = pozicija + 10 / 2 + 1.8 - 0.5;
-                    posZ = -(dubina / 2 - 0.3);
-                    fileName = "GenBokLadice.ipt";
+                    posX = width - 4.6;
+                    posY = position + 10 / 2 + 1.8 - 0.5;
+                    posZ = -(depth / 2 - 0.3);
+                    fileName = "GenDrawerSide.ipt";
                     break;
-                case "BokLadice:2":
+                case "DrawerSide:2":
                     orjX = "-X";
                     orjY = "Z";
                     orjZ = "Y";
                     posX = 4.6;
-                    posY = pozicija + 10 / 2 + 1.8 - 0.5;
-                    posZ = -(dubina / 2 - 0.3);
-                    fileName = "GenBokLadice.ipt";
+                    posY = position + 10 / 2 + 1.8 - 0.5;
+                    posZ = -(depth / 2 - 0.3);
+                    fileName = "GenDrawerSide.ipt";
                     break;
-                case "DnoLadice":
+                case "DrawerBottom":
                 default:
                     orjX = "X";
                     orjY = "-Z";
                     orjZ = "-Y";
-                    posX = sirina / 2;
-                    posY = pozicija + 1.8 + 0.3;
-                    posZ = -(dubina / 2) + 1.2;
-                    fileName = "DnoLadice.ipt";
+                    posX = width / 2;
+                    posY = position + 1.8 + 0.3;
+                    posZ = -(depth / 2) + 1.2;
+                    fileName = "DrawerBottom.ipt";
                     break;
             }
             //TODO - CurrentDoc je ActiveEditDocument
@@ -173,7 +172,7 @@ namespace KitchenConfig
             ComponentOccurrence newOcc;
             PartDocument oMainDoc = null;
 
-            if (fileName == "Rukohvat01.ipt")
+            if (fileName == "Handler01.ipt")
             {
                 try
                 {
@@ -202,49 +201,49 @@ namespace KitchenConfig
             switch (name)
             {
                 case "DrawerFront":
-                    elemUserParameters["Width"].Value = sirina;
-                    elemUserParameters["Heigth"].Value = visina;
+                    elemUserParameters["Width"].Value = width;
+                    elemUserParameters["Heigth"].Value = height;
                     elemUserParameters["DistanceForHandle"].Value = 9;
-                    fileName = "Drawer Front " + AuxFunctions.ConvertCmInMm(sirina) + "x" + AuxFunctions.ConvertCmInMm(visina) + ".ipt";
+                    fileName = "Drawer Front " + AuxFunctions.ConvertCmInMm(width) + "x" + AuxFunctions.ConvertCmInMm(height) + ".ipt";
                     newOcc.Name = name;
                     break;
-                case "Rukohvat":
+                case "Handler":
                     newOcc.Name = name;
                     break;
-                case "ZadnjiZidLadice":
-                    elemUserParameters["Height"].Value = 10; // TODO - u stvarnosti uneti promenljivu vrednost
-                    elemUserParameters["Length"].Value = sirina - 9.2;
-                    fileName = "Drawer Backwall " + AuxFunctions.ConvertCmInMm(sirina) + ".ipt";
+                case "DrawerBackwall":
+                    elemUserParameters["Height"].Value = 10;
+                    elemUserParameters["Length"].Value = width - 9.2;
+                    fileName = "Drawer Backwall " + AuxFunctions.ConvertCmInMm(width) + ".ipt";
                     newOcc.Name = name;
                     break;
-                case "DnoLadice":
-                    elemUserParameters["Dubina"].Value = dubina;
-                    elemUserParameters["Sirina"].Value = sirina;
-                    fileName = "Drawer Bottom " + AuxFunctions.ConvertCmInMm(sirina) + "x" + AuxFunctions.ConvertCmInMm(dubina) + ".ipt";
+                case "DrawerBottom":
+                    elemUserParameters["Depth"].Value = depth;
+                    elemUserParameters["Width"].Value = width;
+                    fileName = "Drawer Bottom " + AuxFunctions.ConvertCmInMm(width) + "x" + AuxFunctions.ConvertCmInMm(depth) + ".ipt";
                     newOcc.Name = name;
                     break;
                 case "ABS:1":
-                    elemUserParameters["Length"].Value = visina - 2 * 0.3;
+                    elemUserParameters["Length"].Value = height - 2 * 0.3;
                     newOcc.Name = name;
                     break;
                 case "ABS:2":
-                    elemUserParameters["Length"].Value = visina - 2 * 0.3;
+                    elemUserParameters["Length"].Value = height - 2 * 0.3;
                     newOcc.Name = name;
                     break;
                 case "ABS:3":
-                    elemUserParameters["Length"].Value = sirina - 2 * 0.3;
+                    elemUserParameters["Length"].Value = width - 2 * 0.3;
                     newOcc.Name = name;
                     break;
                 case "ABS:4":
-                    elemUserParameters["Length"].Value = sirina - 2 * 0.3;
+                    elemUserParameters["Length"].Value = width - 2 * 0.3;
                     newOcc.Name = name;
                     break;
-                case "BokLadice:1":
-                case "BokLadice:2":
+                case "DrawerSide:1":
+                case "DrawerSide:2":
                 default:
-                    elemUserParameters["Length"].Value = dubina - 4.2; //TODO - proveriti da li je ova dubina dobra
+                    elemUserParameters["Length"].Value = depth - 4.2;
                     elemUserParameters["Height"].Value = 10;
-                    fileName = "Drawer Lateralwall " + AuxFunctions.ConvertCmInMm(dubina) + ".ipt";
+                    fileName = "Drawer Lateralwall " + AuxFunctions.ConvertCmInMm(depth) + ".ipt";
                     newOcc.Name = name;
                     break;
             }
@@ -276,7 +275,7 @@ namespace KitchenConfig
         private static void MakeDrawerAssembly(int redniBroj)
         {
             ComponentOccurrences allOccurrs = mainDoc.ComponentDefinition.Occurrences;
-            AssemblyDocument oMainDoc = thisApp.Documents.Add(DocumentTypeEnum.kAssemblyDocumentObject, drawerFolder + @"\GenLadica.iam", false) as AssemblyDocument;
+            AssemblyDocument oMainDoc = thisApp.Documents.Add(DocumentTypeEnum.kAssemblyDocumentObject, drawerFolder + @"\GenDrawer.iam", false) as AssemblyDocument;
             AssemblyComponentDefinition oCompDef = oMainDoc.ComponentDefinition;
 
             //position element

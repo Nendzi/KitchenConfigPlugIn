@@ -89,17 +89,7 @@ namespace KitchenConfig
                         string json = File.ReadAllText(paramFile);
 
                         // Loop through params and set each one
-                        //Dictionary<string, string> parameters = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
                         KitchenElementModel parameters = JsonConvert.DeserializeObject<KitchenElementModel>(json);
-
-                        // Ovo je originalni zapis i moram ga zamenuti sa mojim načinom
-                        //foreach (KeyValuePair<string, string> entry in parameters)
-                        //{
-                        //    var paramName = entry.Key;
-                        //    var paramValue = entry.Value;
-                        //    LogTrace($" params: {paramName}, {paramValue}");
-                        //    ChangeParam((AssemblyDocument)doc, paramName, paramValue);
-                        //}
 
                         ChangeParam((AssemblyDocument)doc, "height", parameters.height);
                         ChangeParam((AssemblyDocument)doc, "width", parameters.width);
